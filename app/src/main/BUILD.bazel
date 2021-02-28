@@ -34,6 +34,7 @@ android_library(
         "@maven//:androidx_constraintlayout_constraintlayout",
         "@maven//:androidx_coordinatorlayout_coordinatorlayout",
         "@maven//:androidx_core_core",
+        "@maven//:androidx_dynamicanimation_dynamicanimation",
         "@maven//:androidx_recyclerview_recyclerview",
         "@maven//:com_google_android_material_material",
     ],

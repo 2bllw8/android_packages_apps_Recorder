@@ -27,6 +27,7 @@ APPCOMPAT_VERSION = "1.3.0"
 CONSTRAINT_LAYOUT_VERSION = "2.1.0-beta02"
 COORDINATOR_LAYOUT_VERSION = "1.1.0"
 CORE_VERSION = "1.3.2"
+DYNAMIC_ANIMATION_VERSION = "1.0.0"
 MATERIAL_VERSION = "1.3.0"
 RECYCLERVIEW_VERSION = "1.1.0"
 
@@ -52,6 +53,7 @@ maven_install(
         "androidx.constraintlayout:constraintlayout:%s" % CONSTRAINT_LAYOUT_VERSION,
         "androidx.coordinatorlayout:coordinatorlayout:%s" % COORDINATOR_LAYOUT_VERSION,
         "androidx.core:core:%s" % CORE_VERSION,
+        "androidx.dynamicanimation:dynamicanimation:%s" % DYNAMIC_ANIMATION_VERSION,
         "androidx.recyclerview:recyclerview:%s" % RECYCLERVIEW_VERSION,
         "com.google.android.material:material:%s" % MATERIAL_VERSION,
     ],

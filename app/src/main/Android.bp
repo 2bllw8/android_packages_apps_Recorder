@@ -31,6 +31,7 @@ android_app {
         "androidx-constraintlayout_constraintlayout",
         "androidx-constraintlayout_constraintlayout-solver",
         "androidx.appcompat_appcompat",
+        "androidx.dynamicanimation_dynamicanimation"
         "androidx.recyclerview_recyclerview",
         "com.google.android.material_material",
     ],

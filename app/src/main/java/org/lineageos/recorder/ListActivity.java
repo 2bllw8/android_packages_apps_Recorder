@@ -34,6 +34,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.lineageos.recorder.list.RecordingItemCallbacks;
 import org.lineageos.recorder.list.RecordingsAdapter;
+import org.lineageos.recorder.ui.BounceScrollEdgeFactory;
+import org.lineageos.recorder.ui.SpringFrameLayout;
 import org.lineageos.recorder.utils.LastRecordHelper;
 import org.lineageos.recorder.utils.MediaProviderHelper;
 import org.lineageos.recorder.utils.Utils;
@@ -51,6 +53,7 @@ public class ListActivity extends AppCompatActivity implements RecordingItemCall
 
         final CoordinatorLayout coordinatorLayout = findViewById(R.id.coordinator);
         final Toolbar toolbar = findViewById(R.id.toolbar);
+        final SpringFrameLayout listContainer = findViewById(R.id.list_container);
         final RecyclerView listView = findViewById(R.id.list_view);
         final ProgressBar progressBar = findViewById(R.id.list_loading);
         final TextView emptyText = findViewById(R.id.list_empty);
@@ -61,6 +64,8 @@ public class ListActivity extends AppCompatActivity implements RecordingItemCall
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        listContainer.addSpringView(R.id.list_view);
 
         mAdapter = new RecordingsAdapter(this);
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -73,6 +78,7 @@ public class ListActivity extends AppCompatActivity implements RecordingItemCall
             }
         });
         listView.setLayoutManager(new LinearLayoutManager(this));
+        listView.setEdgeEffectFactory(listContainer.createEdgeEffectFactory());
         listView.setAdapter(mAdapter);
 
         MediaProviderHelper.requestMyRecordings(getContentResolver(), list -> {
