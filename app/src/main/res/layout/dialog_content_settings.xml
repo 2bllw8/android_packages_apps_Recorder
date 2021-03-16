@@ -26,11 +26,16 @@
         android:id="@+id/dialog_content_settings_location_switch"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:text="@string/settings_location_message" />
+        android:text="@string/settings_location_message"
+        android:thumb="@drawable/switch_thumb_selector"
+        app:track="@drawable/switch_track_selector" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/dialog_content_settings_high_quality_switch"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:text="@string/settings_quality_high" />
+        android:text="@string/settings_quality_high"
+        android:thumb="@drawable/switch_thumb_selector"
+        app:track="@drawable/switch_track_selector" />
+
 </LinearLayout>
