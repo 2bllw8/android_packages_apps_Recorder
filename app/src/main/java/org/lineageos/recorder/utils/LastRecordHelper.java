@@ -25,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import org.lineageos.recorder.DialogActivity;
@@ -40,6 +42,7 @@ public class LastRecordHelper {
     private LastRecordHelper() {
     }
 
+    @NonNull
     public static AlertDialog deleteFile(Context context, final Uri uri) {
         return new AlertDialog.Builder(context)
                 .setTitle(R.string.delete_title)
@@ -57,6 +60,7 @@ public class LastRecordHelper {
                 .create();
     }
 
+    @NonNull
     public static AlertDialog promptFileDeletion(Context context,
                                                  final Uri uri,
                                                  Runnable onDelete) {
@@ -77,7 +81,8 @@ public class LastRecordHelper {
                 .create();
     }
 
-    public static AlertDialog promptRename(Context context,
+    @NonNull
+    public static AlertDialog promptRename(@NonNull Context context,
                                            String currentTitle,
                                            Consumer<String> consumer) {
         LayoutInflater inflater = context.getSystemService(LayoutInflater.class);
@@ -106,6 +111,7 @@ public class LastRecordHelper {
                 .create();
     }
 
+    @NonNull
     public static Intent getShareIntent(Uri uri, String mimeType) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType(mimeType);
@@ -115,6 +121,7 @@ public class LastRecordHelper {
         return chooserIntent;
     }
 
+    @NonNull
     public static Intent getOpenIntent(Uri uri, String mimeType) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(uri, mimeType);
@@ -122,6 +129,7 @@ public class LastRecordHelper {
         return intent;
     }
 
+    @NonNull
     public static Intent getDeleteIntent(Context context) {
         Intent intent = new Intent(context, DialogActivity.class);
         intent.putExtra(DialogActivity.EXTRA_TITLE, R.string.sound_last_title);
@@ -129,13 +137,14 @@ public class LastRecordHelper {
         return intent;
     }
 
-    public static void setLastItem(Context context, String path) {
+    public static void setLastItem(@NonNull Context context, String path) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS, 0);
         prefs.edit()
                 .putString(KEY_LAST_SOUND, path)
                 .apply();
     }
 
+    @Nullable
     public static Uri getLastItemUri(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS, 0);
         String uriStr = prefs.getString(KEY_LAST_SOUND, null);
