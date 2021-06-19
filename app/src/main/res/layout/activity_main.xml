@@ -80,6 +80,18 @@
         tools:visibility="visible" />
 
     <ImageView
+        android:id="@+id/sound_result_ok"
+        style="@style/AppTheme.ImageButton"
+        android:contentDescription="@string/confirm"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_confirm"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/main_bottom_container"
+        app:layout_constraintStart_toEndOf="@id/sound_pause_resume"
+        app:layout_constraintTop_toTopOf="@id/main_bottom_container"
+        tools:visibility="visible" />
+
+    <ImageView
         android:id="@+id/sound_list_icon"
         style="@style/AppTheme.ImageButton"
         android:layout_marginEnd="16dp"
@@ -98,4 +110,16 @@
         app:layout_constraintBottom_toBottomOf="@id/main_bottom_container"
         app:layout_constraintEnd_toStartOf="@id/sound_list_icon"
         app:layout_constraintTop_toTopOf="@id/main_bottom_container" />
+
+    <ImageView
+        android:id="@+id/sound_result_cancel"
+        style="@style/AppTheme.ImageButton"
+        android:contentDescription="@string/cancel"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_cancel"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/main_bottom_container"
+        app:layout_constraintEnd_toStartOf="@id/sound_settings"
+        app:layout_constraintTop_toTopOf="@id/main_bottom_container"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

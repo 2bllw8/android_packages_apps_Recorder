@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ImageView;
@@ -68,11 +69,16 @@ public class RecorderActivity extends AppCompatActivity implements
 
     private FloatingActionButton mSoundFab;
     private ImageView mPauseResume;
+    private ImageView mConfirmResult;
+    private ImageView mCancelResult;
 
     private TextView mRecordingText;
     private WaveFormView mRecordingVisualizer;
 
     private LocationHelper mLocationHelper;
+
+    private boolean mReturnAudio;
+    private boolean mHasRecordedAudio;
 
     private final BroadcastReceiver mTelephonyReceiver = new BroadcastReceiver() {
         @Override
@@ -95,6 +101,8 @@ public class RecorderActivity extends AppCompatActivity implements
         ConstraintLayout mainView = findViewById(R.id.main_root);
         mSoundFab = findViewById(R.id.sound_fab);
         mPauseResume = findViewById(R.id.sound_pause_resume);
+        mConfirmResult = findViewById(R.id.sound_result_ok);
+        mCancelResult = findViewById(R.id.sound_result_cancel);
         ImageView soundList = findViewById(R.id.sound_list_icon);
         ImageView settings = findViewById(R.id.sound_settings);
 
@@ -103,6 +111,8 @@ public class RecorderActivity extends AppCompatActivity implements
 
         mSoundFab.setOnClickListener(v -> toggleSoundRecorder());
         mPauseResume.setOnClickListener(v -> togglePause());
+        mConfirmResult.setOnClickListener(v -> confirmLastResultIfExists(true));
+        mCancelResult.setOnClickListener(v -> cancelResult(true));
         soundList.setOnClickListener(v -> openList());
         settings.setOnClickListener(v -> openSettings());
 
@@ -113,6 +123,14 @@ public class RecorderActivity extends AppCompatActivity implements
         mPrefs.registerOnSharedPreferenceChangeListener(this);
 
         mLocationHelper = new LocationHelper(this);
+
+        if (MediaStore.Audio.Media.RECORD_SOUND_ACTION.equals(getIntent().getAction())) {
+            mReturnAudio = true;
+            soundList.setVisibility(View.GONE);
+            settings.setVisibility(View.GONE);
+        } else {
+            mReturnAudio = false;
+        }
 
         bindSoundRecService();
 
@@ -144,9 +162,8 @@ public class RecorderActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        if (LastRecordHelper.getLastItemUri(this) != null) {
-            setResult(RESULT_OK, new Intent().setData(LastRecordHelper.getLastItemUri(this)));
-            LastRecordHelper.setLastItem(this, null); // forget what the last recording was
+        if (mReturnAudio) {
+            confirmLastResultIfExists(false);
         }
         super.onBackPressed();
     }
@@ -237,6 +254,7 @@ public class RecorderActivity extends AppCompatActivity implements
             Intent stopIntent = new Intent(this, SoundRecorderService.class)
                     .setAction(SoundRecorderService.ACTION_STOP);
             startService(stopIntent);
+            mHasRecordedAudio = true;
         } else {
             // Start
             Intent startIntent = new Intent(this, SoundRecorderService.class)
@@ -279,6 +297,10 @@ public class RecorderActivity extends AppCompatActivity implements
                 mPauseResume.setImageResource(R.drawable.ic_pause);
                 mPauseResume.setContentDescription(getString(R.string.pause));
             }
+            if (mReturnAudio) {
+                mConfirmResult.setVisibility(View.GONE);
+                mCancelResult.setVisibility(View.GONE);
+            }
             if (mSoundService != null) {
                 mSoundService.setAudioListener(mRecordingVisualizer);
             }
@@ -288,6 +310,10 @@ public class RecorderActivity extends AppCompatActivity implements
             mSoundFab.setSelected(false);
             mRecordingVisualizer.setVisibility(View.INVISIBLE);
             mPauseResume.setVisibility(View.GONE);
+            if (mReturnAudio && mHasRecordedAudio) {
+                mConfirmResult.setVisibility(View.VISIBLE);
+                mCancelResult.setVisibility(View.VISIBLE);
+            }
             if (mSoundService != null) {
                 mSoundService.setAudioListener(null);
             }
@@ -360,5 +386,26 @@ public class RecorderActivity extends AppCompatActivity implements
 
     private void openList() {
         startActivity(new Intent(this, ListActivity.class));
+    }
+
+    private void confirmLastResultIfExists(boolean quit) {
+        if (mHasRecordedAudio) {
+            Intent resultIntent = new Intent().setData(LastRecordHelper.getLastItemUri(this));
+            setResult(RESULT_OK, resultIntent);
+            // forget what the last recording was
+            LastRecordHelper.setLastItem(this, null);
+            if (quit) {
+                finish();
+            }
+        } else {
+            cancelResult(quit);
+        }
+    }
+
+    private void cancelResult(boolean quit) {
+        setResult(RESULT_CANCELED, new Intent());
+        if (quit) {
+            finish();
+        }
     }
 }
